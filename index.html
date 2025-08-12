@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dieter Walckiers</title>
+  <style>
+    :root {
+      --accent: #c3518b;
+      --bg: #e6e9f0;
+      --ink: #111111;
+      --muted: #666666;
+      --line: #bbbbbb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-header {
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+    
+    .nav-header.hidden {
+      transform: translateY(-100%);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+    }
+
+    .nav-brand {
+      font-weight: 600;
+      font-size: 1.2em;
+      color: var(--ink);
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 40px;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      padding: 5px 0;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .burger-line {
+      width: 100%;
+      height: 2px;
+      background: var(--ink);
+      transition: all 0.3s ease;
+    }
+
+    .burger.active .burger-line:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .burger.active .burger-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .burger.active .burger-line:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -6px);
+    }
+
+    .content-frame {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: calc(100vh - 60px);
+      border: none;
+      background: var(--bg);
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out, top 0.3s ease, height 0.3s ease;
+    }
+    
+    .nav-header.hidden ~ .content-frame {
+      top: 0;
+      height: 100vh;
+    }
+
+    .content-frame.fade-out {
+      opacity: 0;
+    }
+
+    .content-frame.fade-in {
+      animation: fadeIn 0.4s ease-in-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu {
+        position: fixed;
+        left: 0;
+        top: -300px;
+        flex-direction: column;
+        background: white;
+        width: 100%;
+        text-align: center;
+        transition: transform 0.3s;
+        box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+        padding: 20px 0;
+        gap: 0;
+        transform: translateY(0);
+      }
+
+      .nav-menu.active {
+        transform: translateY(360px);
+      }
+
+      .nav-item {
+        padding: 15px;
+      }
+
+      .nav-link {
+        display: block;
+        font-size: 1em;
+      }
+
+      .nav-link.active::after {
+        display: none;
+      }
+
+      .burger {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav-header">
+    <div class="nav-container">
+      <div class="nav-brand">Dieter Walckiers</div>
+      <ul class="nav-menu" id="navMenu">
+        <li class="nav-item">
+          <a class="nav-link active" onclick="navigateTo('home')">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" onclick="navigateTo('resume')">Resume</a>
+        </li>
+      </ul>
+      <button class="burger" id="burger">
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+        <span class="burger-line"></span>
+      </button>
+    </div>
+  </nav>
+
+  <iframe id="contentFrame" class="content-frame" src="home.html"></iframe>
+
+  <script>
+    const burger = document.getElementById('burger');
+    const navMenu = document.getElementById('navMenu');
+    const contentFrame = document.getElementById('contentFrame');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navHeader = document.querySelector('.nav-header');
+
+    let lastScrollY = window.scrollY;
+    let isMenuOpen = false;
+
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+      isMenuOpen = navMenu.classList.contains('active');
+    });
+
+    // Track scroll position for mobile menu
+    let lastIframeScrollY = 0;
+
+    let isNavigating = false;
+
+    function navigateTo(page) {
+      // Prevent multiple navigations at once
+      if (isNavigating) return;
+      
+      let pageName;
+      if (page === 'home') {
+        pageName = 'home.html';
+      } else if (page === 'cv') {
+        pageName = 'cv.html';
+      } else {
+        pageName = 'resume.html';
+      }
+      
+      // Check if we're already on this page
+      if (contentFrame.src.includes(pageName)) {
+        return;
+      }
+      
+      isNavigating = true;
+      
+      // Start fade out
+      contentFrame.classList.add('fade-out');
+      
+      // Wait for fade out to complete
+      setTimeout(() => {
+        // Change the page
+        contentFrame.src = pageName;
+        
+        // Update nav links
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if ((page === 'home' && link.textContent === 'Home') || 
+              ((page === 'resume' || page === 'cv') && link.textContent === 'Resume')) {
+            link.classList.add('active');
+          }
+        });
+
+        // Close mobile menu if open
+        if (navMenu.classList.contains('active')) {
+          navMenu.classList.remove('active');
+          burger.classList.remove('active');
+          isMenuOpen = false;
+        }
+
+        // Update URL
+        window.location.hash = page;
+        history.replaceState({ page }, '', `#${page}`);
+        
+        // When iframe loads, fade it in
+        contentFrame.onload = () => {
+          contentFrame.classList.remove('fade-out');
+          contentFrame.classList.add('fade-in');
+          
+          // Clean up animation class after animation completes
+          setTimeout(() => {
+            contentFrame.classList.remove('fade-in');
+            isNavigating = false;
+          }, 400);
+        };
+      }, 300);
+    }
+
+    window.navigateTo = navigateTo;
+
+    // Listen for messages from iframes
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.action === 'navigate') {
+        navigateTo(event.data.page);
+      } else if (event.data && event.data.type === 'scroll') {
+        const currentScrollY = event.data.scrollY;
+        const scrollDelta = currentScrollY - lastIframeScrollY;
+        
+        // Hide/show nav header based on scroll direction
+        if (scrollDelta > 0 && currentScrollY > 60) {
+          // Scrolling down and past the header height - hide nav
+          navHeader.classList.add('hidden');
+        } else if (scrollDelta < 0) {
+          // Scrolling up - show nav
+          navHeader.classList.remove('hidden');
+        }
+        
+        lastIframeScrollY = currentScrollY;
+      }
+    });
+
+    window.addEventListener('popstate', (event) => {
+      if (event.state && event.state.page) {
+        navigateTo(event.state.page);
+      }
+    });
+
+    // Listen for hash changes (for iframe navigation)
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.slice(1);
+      const currentSrc = contentFrame.src;
+      
+      // Only navigate if we're actually changing pages
+      if (hash === 'resume' && !currentSrc.includes('resume.html')) {
+        navigateTo('resume');
+      } else if (hash === 'cv' && !currentSrc.includes('cv.html')) {
+        navigateTo('cv');
+      } else if ((hash === 'home' || hash === '') && !currentSrc.includes('home.html')) {
+        navigateTo('home');
+      }
+    });
+
+    // Initial page load
+    const hash = window.location.hash.slice(1);
+    if (hash === 'resume') {
+      navigateTo('resume');
+    } else if (hash === 'cv') {
+      navigateTo('cv');
+    } else {
+      navigateTo('home');
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          navMenu.classList.remove('active');
+          burger.classList.remove('active');
+          isMenuOpen = false;
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
