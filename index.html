@@ -250,6 +250,8 @@
 
     // Track scroll position for mobile menu
     let lastIframeScrollY = 0;
+    let scrollTimeout = null;
+    let isScrolling = false;
 
     let isNavigating = false;
 
@@ -325,16 +327,31 @@
         const currentScrollY = event.data.scrollY;
         const scrollDelta = currentScrollY - lastIframeScrollY;
         
-        // Hide/show nav header based on scroll direction
-        if (scrollDelta > 0 && currentScrollY > 60) {
-          // Scrolling down and past the header height - hide nav
-          navHeader.classList.add('hidden');
-        } else if (scrollDelta < 0) {
-          // Scrolling up - show nav
-          navHeader.classList.remove('hidden');
+        // Clear existing timeout
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
         }
         
-        lastIframeScrollY = currentScrollY;
+        // Only process scroll if delta is significant (more than 5 pixels)
+        if (Math.abs(scrollDelta) > 5) {
+          // Hide/show nav header based on scroll direction
+          if (scrollDelta > 0 && currentScrollY > 60) {
+            // Scrolling down and past the header height - hide nav
+            if (!navHeader.classList.contains('hidden')) {
+              navHeader.classList.add('hidden');
+            }
+          } else if (scrollDelta < 0) {
+            // Scrolling up - show nav
+            if (navHeader.classList.contains('hidden')) {
+              navHeader.classList.remove('hidden');
+            }
+          }
+        }
+        
+        // Debounce the scroll position update
+        scrollTimeout = setTimeout(() => {
+          lastIframeScrollY = currentScrollY;
+        }, 50);
       }
     });
 
