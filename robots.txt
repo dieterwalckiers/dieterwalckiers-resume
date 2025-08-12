@@ -1,0 +1,135 @@
+# Block all bots, search engines, and scrapers
+User-agent: *
+Disallow: /
+Crawl-delay: 86400
+
+# Specifically block known AI and scraper bots
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
+User-agent: facebookexternalhit
+Disallow: /
+
+User-agent: WhatsApp
+Disallow: /
+
+User-agent: LinkedInBot
+Disallow: /
+
+User-agent: TwitterBot
+Disallow: /
+
+User-agent: Slackbot
+Disallow: /
+
+User-agent: Discordbot
+Disallow: /
+
+User-agent: TelegramBot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: ia_archiver
+Disallow: /
+
+User-agent: Facebot
+Disallow: /
+
+User-agent: Twitterbot
+Disallow: /
+
+User-agent: WhatsApp
+Disallow: /
+
+User-agent: rogerbot
+Disallow: /
+
+User-agent: AdsBot-Google
+Disallow: /
+
+User-agent: Googlebot-Image
+Disallow: /
+
+User-agent: Googlebot-Video
+Disallow: /
+
+User-agent: Mediapartners-Google
+Disallow: /
+
+# Block all with wildcard patterns
+User-agent: *bot*
+Disallow: /
+
+User-agent: *spider*
+Disallow: /
+
+User-agent: *crawl*
+Disallow: /
+
+User-agent: *scraper*
+Disallow: /
+
+User-agent: *archiver*
+Disallow: /
+
+# No sitemap provided
+Sitemap:
